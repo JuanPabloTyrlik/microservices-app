@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:5.0.9-focal
+    ports:
+      - 27017:27017
+    networks:
+      - mongo
+    volumes:
+      - .data:/data/db
+
+  redis:
+    image: redis:7.0.0-alpine
+    ports:
+      - 6379:6379
+    networks:
+      - redis
+
+  cpc-scrapper:
+    build:
+      context: ./cpc-scrapper
+    depends_on:
+      - redis
+    networks:
+      - redis
+
+  redis-to-mongo:
+    build:
+      context: ./redis-to-mongo
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - redis
+      - mongo
+  api:
+    build:
+      context: ./api
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    networks:
+      - mongo
+
+networks:
+  mongo:
+    driver: bridge
+  redis:
+    driver: bridge
