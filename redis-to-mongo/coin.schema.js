@@ -1,7 +1,7 @@
 const { model, Schema } = require("mongoose");
 
 const CoinSchema = new Schema({
-  rank: String,
+  rank: Number,
   name: String,
   symbol: String,
   price: Number,

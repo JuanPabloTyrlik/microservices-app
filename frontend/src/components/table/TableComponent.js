@@ -22,18 +22,18 @@ export default function TableComponent() {
 
   useEffect(() => {
     fetchTopCoins();
-  }, [coins]);
+  }, []);
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Rank</TableCell>
+            <TableCell>Rank (7d)</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Symbol</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Market Cap</TableCell>
+            <TableCell>Price (7d)</TableCell>
+            <TableCell>Market Cap (7d)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -43,12 +43,16 @@ export default function TableComponent() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.rank}
+                {row.rank} ({row["7d"].rank})
               </TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.symbol}</TableCell>
-              <TableCell>{row.price}</TableCell>
-              <TableCell>{row.marketCap}</TableCell>
+              <TableCell>
+                {row.price} ({row["7d"].price})
+              </TableCell>
+              <TableCell>
+                {row.marketCap} ({row["7d"].marketCap})
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

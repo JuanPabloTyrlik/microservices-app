@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
 import { connect } from "mongoose";
+import { aggregation } from "./constants";
 import { CoinModel } from "./schemas/coin.schema";
 
 (async () => {
@@ -10,7 +11,7 @@ import { CoinModel } from "./schemas/coin.schema";
   app.get("/api/top-coins", async (req: Request, res: Response) => {
     await connect("mongodb://mongo:27017/crypto");
 
-    const coins = await CoinModel.find({}).sort({ timestamp: -1 }).limit(10);
+    const coins = await CoinModel.aggregate(aggregation);
 
     res.status(200).json({ coins });
   });
