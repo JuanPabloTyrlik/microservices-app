@@ -17,6 +17,13 @@ spec:
       containers:
         - image: mongo
           name: mongo
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-data
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-data-claim
 ---
 apiVersion: v1
 kind: Service
@@ -33,6 +40,37 @@ spec:
     app: mongo
   type: ClusterIP
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app: mongo
+  name: mongo-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity: 
+    storage: 100Mi
+  hostPath:
+    path: .data
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: mongo
+  name: mongo-data-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
