@@ -50,9 +50,9 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity: 
-    storage: 100Mi
+    storage: 500Mi
   hostPath:
-    path: .data
+    path: /Users/juanpablotyrlik/projects/microservices-app/.data
     type: Directory
 ---
 apiVersion: v1
@@ -67,7 +67,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 100Mi
+      storage: 500Mi
 
 ---
 
@@ -175,8 +175,72 @@ metadata:
 spec:
   ports:
     - port: 3000
-      protocol: TCP
-      targetPort: 3000
   selector:
     app: api
-  type: NodePort
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - image: juanpablotyrlik/microservices-app-frontend
+          name: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  ports:
+    - port: 3001
+  selector:
+    app: frontend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: juanpablotyrlik/microservices-app-nginx
+          name: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
