@@ -24,7 +24,7 @@ services:
     networks:
       - redis
     deploy:
-      replicas: 3
+      replicas: 1
 
   redis-to-mongo:
     image: juanpablotyrlik/microservices-app-redis-to-mongo
@@ -35,21 +35,41 @@ services:
       - redis
       - mongo
     deploy:
-      replicas: 3
+      replicas: 1
+
   api:
     image: juanpablotyrlik/microservices-app-api
-    ports:
-      - 3000:3000
     depends_on:
       - mongo
     networks:
       - mongo
+      - proxy
     deploy:
-      replicas: 3
+      replicas: 1
+
+  frontend:
+    image: juanpablotyrlik/microservices-app-frontend
+    depends_on:
+      - api
+    networks:
+      - proxy
+
+  nginx:
+    image: juanpablotyrlik/microservices-app-nginx
+    ports:
+      - 80:80
+    networks:
+      - proxy
+    depends_on:
+      - api
+      - frontend
+
 networks:
   mongo:
     driver: overlay
   redis:
+    driver: overlay
+  proxy:
     driver: overlay
 
 volumes:
