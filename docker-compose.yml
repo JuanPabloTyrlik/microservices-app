@@ -37,15 +37,35 @@ services:
   api:
     build:
       context: ./api
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     depends_on:
       - mongo
     networks:
       - mongo
+      - proxy
+  frontend:
+    build: ./frontend
+    expose:
+      - 3001
+    networks:
+      - proxy
+    depends_on:
+      - api
 
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    networks:
+      - proxy
+    depends_on:
+      - api
+      - frontend
 networks:
   mongo:
     driver: bridge
   redis:
+    driver: bridge
+  proxy:
     driver: bridge

@@ -16,7 +16,7 @@ export default function TableComponent() {
   const fetchTopCoins = async () => {
     const {
       data: { coins: newCoins },
-    } = await axios.get("http://localhost:3000/api/top-coins");
+    } = await axios.get("http://localhost/api/top-coins");
     setCoins(newCoins);
   };
 

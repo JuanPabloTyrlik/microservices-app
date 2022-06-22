@@ -1,9 +1,9 @@
 FROM node:18-alpine
 
-EXPOSE 3000
+EXPOSE 3001
 
-RUN mkdir -p /opt/microservices-app/api && chown node:node /opt/microservices-app/api
-WORKDIR /opt/microservices-app/api
+RUN mkdir -p /opt/microservices-app/frontend && chown node:node /opt/microservices-app/frontend
+WORKDIR /opt/microservices-app/frontend
 
 USER node
 COPY --chown=node:node package*.json ./
