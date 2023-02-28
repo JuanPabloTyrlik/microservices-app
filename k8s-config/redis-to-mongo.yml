@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: redis-to-mongo
+  name: redis-to-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-to-mongo
+  template:
+    metadata:
+      labels:
+        app: redis-to-mongo
+    spec:
+      containers:
+        - image: juanpablotyrlik/microservices-app-redis-to-mongo
+          name: redis-to-mongo

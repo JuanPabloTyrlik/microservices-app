@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cpc-scrapper
+  name: cpc-scrapper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cpc-scrapper
+  template:
+    metadata:
+      labels:
+        app: cpc-scrapper
+    spec:
+      containers:
+        - image: juanpablotyrlik/microservices-app-cpc-scrapper
+          name: cpc-scrapper
